@@ -1,0 +1,689 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Object Show Challenge Generator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+:root {
+  --blue: #a9d9f5;
+  --blue-dark: #65b5e8;
+  --pink: #f6c6dc;
+  --pink-dark: #e99cbe;
+  --white: #ffffff;
+  --ink: #42566a;
+  --muted: #8295a6;
+  --bg: #f2f8fc;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Nunito', sans-serif;
+  background:
+    radial-gradient(circle at 5% 5%, #e3f4ff 0, transparent 30%),
+    radial-gradient(circle at 95% 90%, #ffe9f3 0, transparent 30%),
+    var(--bg);
+  color: var(--ink);
+  padding: 35px 16px;
+}
+
+.container {
+  width: 100%;
+  max-width: 850px;
+  margin: auto;
+}
+
+header { text-align: center; margin-bottom: 30px; }
+
+.logo {
+  display: inline-block;
+  background: white;
+  padding: 8px 18px;
+  border-radius: 30px;
+  color: var(--blue-dark);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+  box-shadow: 0 3px 12px #8eb6d522;
+}
+
+h1 {
+  font-size: clamp(27px, 5vw, 43px);
+  line-height: 1.1;
+  margin: 5px 0;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+
+h1 span { color: var(--pink-dark); }
+
+.subtitle { color: var(--muted); font-size: 14px; }
+
+.panel {
+  background: rgba(255,255,255,.92);
+  border: 1px solid #e3edf4;
+  border-radius: 23px;
+  padding: 25px;
+  box-shadow: 0 10px 35px #7798b515;
+  margin-bottom: 18px;
+}
+
+.section-label {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 1.4px;
+  color: var(--muted);
+  margin-bottom: 13px;
+}
+
+.categories {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.category {
+  border: 2px solid #e8eff5;
+  background: #f9fcff;
+  color: var(--ink);
+  border-radius: 15px;
+  padding: 15px 5px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 900;
+  transition: .2s;
+}
+
+.category small {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.category:hover { transform: translateY(-2px); }
+
+.category.active {
+  border-color: var(--blue-dark);
+  background: #e8f6ff;
+  color: #398fc4;
+  box-shadow: 0 4px 12px #8cc9ed30;
+}
+
+.result {
+  text-align: center;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #edf8ff, #fff0f6);
+  border: 1px solid #e5edf4;
+  border-radius: 19px;
+  padding: 28px 20px;
+  margin-top: 20px;
+}
+
+.result-tag {
+  font-size: 11px;
+  letter-spacing: 2px;
+  font-weight: 900;
+  color: var(--pink-dark);
+  margin-bottom: 12px;
+}
+
+#challengeTitle {
+  font-size: clamp(21px, 4vw, 29px);
+  font-weight: 900;
+  margin: 0 0 10px;
+}
+
+#challengeDescription {
+  max-width: 570px;
+  line-height: 1.65;
+  color: #667d90;
+  font-size: 14px;
+  margin: 0;
+}
+
+.placeholder {
+  color: #9bb0c0;
+  font-weight: 800;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 19px;
+}
+
+button { font-family: inherit; }
+
+.action {
+  border: none;
+  padding: 13px 24px;
+  border-radius: 13px;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.action:hover { transform: translateY(-2px); filter: brightness(.98); }
+.action:active { transform: scale(.97); }
+
+.primary {
+  background: var(--blue-dark);
+  color: white;
+  box-shadow: 0 5px 12px #65b5e840;
+}
+
+.secondary {
+  background: var(--pink);
+  color: #94526e;
+}
+
+.tertiary {
+  background: #eef3f7;
+  color: #64798a;
+}
+
+.status {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 15px;
+  text-align: center;
+  min-height: 18px;
+}
+
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.stat {
+  background: #f4faff;
+  border-radius: 13px;
+  padding: 13px;
+  margin-bottom: 12px;
+}
+
+.stat strong { font-size: 23px; color: var(--blue-dark); }
+.stat span { display: block; font-size: 11px; color: var(--muted); }
+
+.history {
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.history-item {
+  border-bottom: 1px solid #edf1f5;
+  padding: 10px 0;
+}
+
+.history-item:last-child { border: none; }
+.history-item strong { display: block; font-size: 13px; }
+.history-item small { color: var(--muted); font-size: 11px; }
+
+.empty {
+  color: #a0b0bd;
+  font-size: 13px;
+  padding: 12px 0;
+}
+
+footer {
+  text-align: center;
+  color: #9aabba;
+  font-size: 11px;
+  margin-top: 25px;
+}
+
+@media(max-width:600px) {
+  .categories { grid-template-columns: repeat(2, 1fr); }
+  .bottom-grid { grid-template-columns: 1fr; }
+  .panel { padding: 19px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="logo">THE OBJECT SHOW TOOLKIT</div>
+  <h1>Challenge <span>Generator</span></h1>
+  <p class="subtitle">Your next competition starts here.</p>
+</header>
+
+<section class="panel">
+  <div class="section-label">01 — SELECT CHALLENGE TYPE</div>
+
+  <div class="categories">
+    <button class="category active" data-type="Purge">
+      PURGE<small>Elimination competition</small>
+    </button>
+    <button class="category" data-type="Solo">
+      SOLO<small>Individual competition</small>
+    </button>
+    <button class="category" data-type="2 Teams">
+      2 TEAMS<small>Head-to-head</small>
+    </button>
+    <button class="category" data-type="2+ Teams">
+      2+ TEAMS<small>Multiple teams</small>
+    </button>
+  </div>
+
+  <div class="result">
+    <div class="result-tag" id="resultTag">PURGE CHALLENGE</div>
+    <h2 id="challengeTitle" class="placeholder">Waiting for a challenge...</h2>
+    <p id="challengeDescription">Choose your challenge type and hit RANDOMIZE to get started!</p>
+  </div>
+
+  <div class="actions">
+    <button class="action primary" id="randomize">RANDOMIZE</button>
+    <button class="action secondary" id="reroll">REROLL ↻</button>
+  </div>
+  <div class="status" id="status">200 challenges available across 4 categories.</div>
+</section>
+
+<div class="bottom-grid">
+  <section class="panel">
+    <div class="section-label">02 — DATABASE</div>
+    <div class="stat">
+      <strong id="totalCount">200</strong>
+      <span>Total challenges</span>
+    </div>
+    <div class="stat">
+      <strong id="remainingCount">50</strong>
+      <span>Remaining in selected category</span>
+    </div>
+    <button class="action tertiary" id="resetPool" style="width:100%">
+      RESET CHALLENGE POOL
+    </button>
+  </section>
+
+  <section class="panel">
+    <div class="section-label">03 — CHALLENGE HISTORY</div>
+    <div class="history" id="history">
+      <div class="empty">No challenges generated yet!</div>
+    </div>
+    <button class="action tertiary" id="clearHistory" style="width:100%;margin-top:12px">
+      CLEAR HISTORY
+    </button>
+  </section>
+</div>
+
+<footer>OBJECT SHOW CHALLENGE GENERATOR · MADE FOR OBJECT SHOW CREATORS</footer>
+</div>
+
+<script>
+const rawChallenges = {
+
+// 50 PURGE CHALLENGES
+"Purge": [
+"Obstacle Course|Cross a course of obstacles. The last contestant to finish loses.",
+"Puzzle Panic|Complete a large jigsaw puzzle. The last contestant to finish loses.",
+"Memory Test|Memorize a display of objects, then recreate it. The lowest score loses.",
+"Tower Trouble|Build the tallest freestanding tower before time runs out. The shortest loses.",
+"Hidden Treasure|Find a hidden token somewhere in the designated area. The last contestant to find it loses.",
+"Marble Run|Construct a track that gets a marble to the finish. The slowest successful run loses.",
+"Target Practice|Hit as many targets as possible in one minute. The lowest score loses.",
+"Paper Plane Race|Make and fly a paper airplane. The shortest flight loses.",
+"Balance Test|Keep an object balanced on a platform. The first to drop it loses.",
+"Speed Drawing|Draw a given object before time runs out. The lowest-rated drawing loses.",
+"Trivia Rush|Answer ten trivia questions. The lowest score loses.",
+"Code Breaker|Decode a secret message. The last contestant to solve it loses.",
+"Scavenger Sprint|Find five listed items. The last contestant to return loses.",
+"Bridge Builder|Build a bridge that supports weights. The weakest bridge loses.",
+"Bucket Challenge|Move water between containers using a sponge. The least water collected loses.",
+"Color Match|Recreate a complicated color pattern. The least accurate result loses.",
+"Domino Chain|Build and trigger a domino chain. The shortest successful chain loses.",
+"Escape Route|Find your way through a maze. The last contestant to escape loses.",
+"Balloon Keep-Up|Keep a balloon in the air while completing tasks. The first to let it touch the floor loses.",
+"Shape Sorter|Sort a mixed pile of shapes into the correct groups. The last contestant loses.",
+"Mini Golf|Complete a miniature golf course in the fewest strokes. The highest score loses.",
+"Word Scramble|Unscramble a collection of words. The lowest score loses.",
+"Stack Attack|Stack a set of cups and return them to their original arrangement. The last contestant loses.",
+"Musical Freeze|Complete a series of poses when the music stops. The first to miss a pose loses.",
+"Paper Tower|Build the tallest tower using only paper. The shortest tower loses.",
+"Secret Recipe|Identify ingredients in a mystery recipe. The lowest score loses.",
+"Ring Toss|Land rings on targets. The fewest successful throws loses.",
+"Speed Sorting|Sort a mixed collection of objects by category. The slowest loses.",
+"Shadow Match|Match objects to their silhouettes. The lowest score loses.",
+"Hot Potato Relay|Pass an object through a sequence of stations. The last contestant loses.",
+"Pattern Detective|Identify and continue a series of patterns. The lowest score loses.",
+"Magnet Maze|Guide a metal object through a maze using a magnet. The slowest loses.",
+"Build a Boat|Create a small boat that floats with the greatest load. The lowest capacity loses.",
+"Sound Detective|Identify mystery sounds. The lowest score loses.",
+"Catch the Ball|Catch as many falling balls as possible. The fewest catches loses.",
+"Treasure Map|Follow clues to locate a hidden object. The last contestant loses.",
+"Blindfold Build|Build a recognizable structure using verbal instructions only. The lowest-rated result loses.",
+"Precision Landing|Land a paper glider closest to a target. The farthest loses.",
+"Light It Up|Create a working circuit that lights a bulb. The last successful build loses.",
+"Reaction Test|Complete a series of reaction-based tasks. The lowest score loses.",
+"Block Replica|Recreate a model using identical blocks. The least accurate result loses.",
+"Coin Slide|Slide coins toward a target line. The farthest average distance loses.",
+"Treasure Tower|Retrieve objects from a tower without knocking it down. The first to collapse it loses.",
+"Rope Bridge|Cross a suspended low-level balance course. The slowest loses.",
+"Flash Recall|Study a picture for thirty seconds and answer questions. The lowest score loses.",
+"Perfect Pitch|Recreate a sequence of musical notes. The least accurate loses.",
+"Ball Bounce|Bounce a ball into a series of containers. The fewest successful shots loses.",
+"Hidden Difference|Find all differences between two pictures. The last contestant loses.",
+"Resource Rush|Collect the most scattered resources within the time limit. The lowest amount loses.",
+"Final Sprint|Complete three short mini-challenges in sequence. The slowest overall contestant loses."
+],
+
+// 50 SOLO CHALLENGES
+"Solo": [
+"Masterpiece|Create an original piece of artwork using the provided supplies. The best artwork wins.",
+"Inventor's Workshop|Invent a useful device from random materials. The most creative functional invention wins.",
+"Commercial Break|Create and perform a commercial for a random everyday object. The best commercial wins.",
+"Mini Movie|Make a short film using a random prompt. The best film wins.",
+"Fashion Forward|Design an outfit for a specific occasion. The best design wins.",
+"Build a Playground|Design a miniature playground. The most creative and functional design wins.",
+"Recipe Remix|Create a dish from a set of mystery ingredients. The best result wins.",
+"Paper Architecture|Design a miniature building using paper. The best structure wins.",
+"Write a Jingle|Write and perform a catchy jingle for a random product. The best jingle wins.",
+"Personal Museum|Create a tiny museum exhibit about a random topic. The best exhibit wins.",
+"Cardboard Creation|Build a functional object out of cardboard. The best creation wins.",
+"Logo Design|Design a logo for a fictional company. The most recognizable design wins.",
+"Board Game Designer|Create a playable mini board game. The most entertaining game wins.",
+"Character Creator|Design a new character from three random traits. The best character wins.",
+"Room Makeover|Create a miniature room design from supplied materials. The best design wins.",
+"Comic Strip|Create a short comic with a surprise ending. The best comic wins.",
+"Paper Sculpture|Create a sculpture using only paper. The most impressive sculpture wins.",
+"Music Producer|Compose a short original tune using available instruments. The best tune wins.",
+"Short Story|Write a short story using three randomly selected words. The best story wins.",
+"Robot Builder|Build a robot that can complete a simple task. The best working robot wins.",
+"Puzzle Designer|Create a puzzle that another contestant can solve. The most clever puzzle wins.",
+"Theme Park Designer|Design a miniature theme park with three attractions. The best park wins.",
+"Flag Designer|Create a flag for a fictional country. The most distinctive flag wins.",
+"Photography Challenge|Take a picture that represents a randomly selected emotion. The best photograph wins.",
+"Prop Designer|Create a prop for a fictional movie. The best prop wins.",
+"Miniature City|Build a miniature city with at least five buildings. The best city wins.",
+"Poetry Slam|Write and perform a poem using a surprise topic. The best performance wins.",
+"Product Pitch|Pitch an invention to a panel of judges. The most convincing pitch wins.",
+"Treasure Box|Create a box with a secret compartment. The cleverest design wins.",
+"Puzzle Master|Create a three-step puzzle trail. The most entertaining trail wins.",
+"Stop Motion|Create a short stop-motion animation. The best animation wins.",
+"Paper Engineering|Create a pop-up paper design. The most impressive design wins.",
+"Garden Designer|Build a miniature garden with a theme. The best garden wins.",
+"Costume Creation|Make a costume for a fictional character using supplied materials. The best costume wins.",
+"Adventure Map|Draw a detailed map of an imaginary world. The most interesting map wins.",
+"Weather Machine|Design a fictional machine that controls weather. The most creative design wins.",
+"Recycled Art|Create an artwork from recycled materials. The best artwork wins.",
+"Toy Designer|Design a new toy and explain how it works. The most appealing toy wins.",
+"Escape Room Creator|Design a miniature escape-room puzzle. The most clever puzzle wins.",
+"Food Truck|Design a food truck and its menu. The best concept wins.",
+"Book Cover|Design a cover for a fictional book. The most fitting cover wins.",
+"Mini Golf Designer|Build one miniature golf hole. The most entertaining hole wins.",
+"Time Capsule|Create a time capsule representing the present. The most thoughtful capsule wins.",
+"Fantasy Creature|Design a creature with three special abilities. The most original creature wins.",
+"Puzzle Portrait|Create a recognizable portrait using geometric shapes. The best portrait wins.",
+"Toy Advertisement|Create a short advertisement for an imaginary toy. The most entertaining ad wins.",
+"Miniature Airport|Design a working miniature airport layout. The best layout wins.",
+"Fictional Currency|Design a currency system for an imaginary country. The most convincing system wins.",
+"New Holiday|Invent a holiday with traditions, decorations, and activities. The best holiday wins.",
+"One-Minute Performance|Prepare a one-minute performance based on a surprise genre. The best performance wins."
+],
+
+// 50 TWO-TEAM CHALLENGES
+"2 Teams": [
+"Team Relay|Complete a relay race with every member participating. The first team to finish wins.",
+"Fort Builders|Build a fort using the supplied materials. The strongest and most creative fort wins.",
+"Capture the Flag|Capture the opposing team's flag and return it to your base. The first successful team wins.",
+"Bridge Battle|Build a bridge that can support the greatest weight. The strongest bridge wins.",
+"Team Puzzle|Complete an enormous puzzle. The first team to finish wins.",
+"Restaurant Rush|Create a restaurant concept, menu, and presentation. The best restaurant wins.",
+"Commercial Competition|Create a commercial for the same fictional product. The best commercial wins.",
+"Obstacle Relay|Navigate a course while passing a baton between teammates. The fastest team wins.",
+"Treasure Expedition|Follow a sequence of clues to find a treasure. The first team to find it wins.",
+"Build a Vehicle|Construct a vehicle that can travel across a short course. The farthest successful journey wins.",
+"Team Tower|Build the tallest freestanding tower. The tallest stable tower wins.",
+"Escape Challenge|Solve a series of clues to escape a locked challenge area. The first team out wins.",
+"Cooking Contest|Create a dish using identical ingredients. The best dish wins.",
+"Team Trivia|Answer a series of trivia questions. The highest-scoring team wins.",
+"Mini Olympics|Compete in five different sporting events. The team with the most points wins.",
+"Movie Makers|Create a short film based on a random genre. The best film wins.",
+"Resource Race|Gather resources and trade them to complete a shopping list. The first team to finish wins.",
+"Cardboard Castle|Build the most impressive cardboard castle. The best castle wins.",
+"Water Transport|Move water from one end of a course to another. The team that delivers the most wins.",
+"Memory Masters|Study a giant display and recreate it from memory. The most accurate team wins.",
+"Domino Disaster|Create the longest successful domino chain. The longest chain wins.",
+"Art Gallery|Create a collection of themed artworks. The best gallery wins.",
+"Team Mascot|Design and present a mascot for your team. The best mascot wins.",
+"Miniature City|Build a miniature city with specific required buildings. The best city wins.",
+"Balloon Tower|Build the tallest tower using balloons and tape. The tallest stable tower wins.",
+"Signal Search|Decode a series of messages scattered around the area. The first team to solve them all wins.",
+"Paper Airplane Championship|Build and launch paper airplanes. The longest combined flight wins.",
+"Musical Medley|Create and perform a short musical piece. The best performance wins.",
+"Market Day|Create products and run a pretend marketplace. The team earning the most points wins.",
+"Build a Boat|Create a boat that can carry the most weight across water. The greatest load wins.",
+"Team Sculptures|Create a sculpture around a surprise theme. The best sculpture wins.",
+"Map the Unknown|Explore a designated area and create an accurate map. The most accurate map wins.",
+"Secret Agent Mission|Complete a series of fictional spy-themed puzzles. The fastest team wins.",
+"Sports Inventors|Invent a new sport and demonstrate its rules. The most entertaining sport wins.",
+"Paper City|Build a functioning miniature city using paper. The best city wins.",
+"Blindfold Drawing|One teammate describes an image while another draws it. The closest drawing wins.",
+"Puzzle Race|Solve multiple different puzzles in sequence. The first team to finish wins.",
+"Parade Float|Build and present a themed miniature parade float. The best float wins.",
+"Amusement Park|Design a miniature amusement park with working attractions. The best park wins.",
+"Team Invention|Create a device that solves a random everyday problem. The best invention wins.",
+"Treasure Defense|Protect your team's treasure while attempting to retrieve the other team's. The team with the most points wins.",
+"Speed Sorting|Sort a massive collection of objects into designated categories. The first team to finish wins.",
+"Design a Board Game|Create a playable board game and demonstrate it. The most enjoyable game wins.",
+"Recycled Racers|Build vehicles from recycled materials and race them. The fastest vehicle wins.",
+"Build a Maze|Create a maze that the opposing team must navigate. The best maze wins.",
+"Team Fashion Show|Create coordinated outfits around a surprise theme. The best collection wins.",
+"Balloon Transport|Move a ball across a course without using your hands. The first team to finish wins.",
+"Code Competition|Decode a series of increasingly difficult messages. The first team to solve all wins.",
+"Surprise Party|Plan a themed surprise party with decorations and activities. The best party wins.",
+"Final Showcase|Present a collection of creative projects in a team exhibition. The best showcase wins."
+],
+
+// 50 MULTI-TEAM CHALLENGES
+"2+ Teams": [
+"Grand Obstacle Course|All teams race through the same obstacle course. The first team to finish wins.",
+"King of the Hill|Earn points by controlling a designated area during timed rounds. The highest score wins.",
+"Territory Takeover|Claim the most territories on a large game board. The team with the most territory wins.",
+"Multi-Team Scavenger Hunt|Find items from a shared scavenger list. The first team to collect everything wins.",
+"Flag Frenzy|Collect flags from different locations. The team with the most flags wins.",
+"Resource Empire|Gather resources and build the most valuable settlement. The highest-value settlement wins.",
+"Team Relay Tournament|Compete in a multi-round relay tournament. The fastest overall team wins.",
+"Treasure Island|Explore a themed island and locate hidden treasures. The team with the most treasure points wins.",
+"Survival Shelter|Build a shelter that meets a list of requirements. The best shelter wins.",
+"Miniature Theme Park|Design a theme park with three attractions. The best park wins.",
+"Trivia Tournament|Compete in multiple rounds of trivia. The highest-scoring team wins.",
+"Robot Rumble|Build a robot that can complete a series of harmless tasks. The highest-performing robot wins.",
+"Puzzle Marathon|Complete a sequence of puzzles. The first team to finish wins.",
+"Tower Tournament|Build the tallest stable tower. The tallest tower wins.",
+"Market Mayhem|Trade resources with other teams to complete objectives. The most valuable final inventory wins.",
+"Team Sports Festival|Compete in several invented sports. The most points wins.",
+"Secret Base|Design a hidden base with specific features. The most creative and functional base wins.",
+"Balloon Battle|Keep your team's balloons airborne through a series of rounds. The most balloons remaining wins.",
+"Miniature Museum|Create a museum exhibit around a surprise theme. The best exhibit wins.",
+"Treasure Auction|Bid on mystery boxes using a limited budget. The team with the highest-value collection wins.",
+"City Planners|Design a city with required buildings and transport routes. The best city wins.",
+"Domino Tournament|Build a domino chain with the greatest number of successful pieces. The longest chain wins.",
+"Art Festival|Create an artwork representing a randomly selected topic. The best artwork wins.",
+"Paper Airplane Grand Prix|Compete in distance and accuracy rounds. The highest combined score wins.",
+"Escape Challenge Tournament|Solve different escape-room puzzles. The fastest team wins.",
+"Mini Golf Championship|Build and play a miniature golf course. The lowest total score wins.",
+"Food Festival|Create a themed food stall and menu. The best overall presentation wins.",
+"Bridge Championship|Build a bridge that can support the greatest weight. The strongest bridge wins.",
+"Capture the Zones|Capture and hold as many marked zones as possible. The highest point total wins.",
+"Build a Monument|Construct a monument representing your team's identity. The best monument wins.",
+"Mission Control|Complete a sequence of communication and coordination tasks. The highest score wins.",
+"Movie Festival|Create a short movie using a shared prompt. The best movie wins.",
+"Puzzle Exchange|Create a puzzle for another team to solve. The team whose puzzle is most successful wins.",
+"Race Across the Map|Travel through checkpoints and complete tasks at each one. The first team to finish wins.",
+"Amusement Park Wars|Create the most entertaining miniature amusement park. The best park wins.",
+"Invent a Holiday|Create a holiday with traditions, decorations, and a presentation. The best holiday wins.",
+"Team Fashion Week|Present a collection based on a random theme. The best collection wins.",
+"Relay Roulette|Complete a relay with a different challenge at every station. The fastest team wins.",
+"Build a Transport Network|Create a network connecting several miniature locations. The most functional network wins.",
+"Treasure Traders|Collect, exchange, and combine treasure tokens. The highest-value collection wins.",
+"Surprise Package|Use mystery materials to create a useful product. The best product wins.",
+"Miniature Airport|Design an airport with runways, terminals, and transport routes. The best airport wins.",
+"Signal Search Tournament|Decode different signals hidden throughout the area. The first team to decode them all wins.",
+"Paper Engineering Expo|Create the most impressive pop-up paper construction. The best design wins.",
+"Resource Rush|Collect resources from a shared area. The highest-value collection wins.",
+"Grand Performance|Create a short performance based on a randomly assigned genre. The best performance wins.",
+"Build a Board Game|Design a playable board game and let another team test it. The most entertaining game wins.",
+"Puzzle Kingdom|Complete different puzzle stations to earn pieces of a final map. The first team to complete the map wins.",
+"Team Invention Fair|Create a device that solves a randomly selected problem. The best invention wins.",
+"Grand Finale|Complete a multi-stage competition involving puzzles, construction, and a final race. The first team to finish wins."
+]
+};
+
+// Convert the database into structured challenge objects.
+const database = {};
+
+for (const [category, entries] of Object.entries(rawChallenges)) {
+  database[category] = entries.map((entry, index) => {
+    const [title, description] = entry.split("|");
+    return { title, description, id: category + "-" + index };
+  });
+}
+
+let selectedType = "Purge";
+let used = {
+  "Purge": [],
+  "Solo": [],
+  "2 Teams": [],
+  "2+ Teams": []
+};
+let history = [];
+
+const titleEl = document.getElementById("challengeTitle");
+const descriptionEl = document.getElementById("challengeDescription");
+const statusEl = document.getElementById("status");
+
+function remaining() {
+  return database[selectedType].length - used[selectedType].length;
+}
+
+function updateStats() {
+  document.getElementById("totalCount").textContent =
+    Object.values(database).reduce((sum, list) => sum + list.length, 0);
+
+  document.getElementById("remainingCount").textContent = remaining();
+
+  statusEl.textContent =
+    remaining() + " challenges remaining in " + selectedType + ".";
+}
+
+function generateChallenge() {
+  const available = database[selectedType].filter(
+    challenge => !used[selectedType].includes(challenge.id)
+  );
+
+  if (available.length === 0) {
+    used[selectedType] = [];
+    statusEl.textContent =
+      "All challenges used! Your " + selectedType + " pool has been reshuffled.";
+    return generateChallenge();
+  }
+
+  const challenge =
+    available[Math.floor(Math.random() * available.length)];
+
+  used[selectedType].push(challenge.id);
+
+  titleEl.textContent = challenge.title;
+  titleEl.classList.remove("placeholder");
+  descriptionEl.textContent = challenge.description;
+
+  document.getElementById("resultTag").textContent =
+    selectedType.toUpperCase() + " CHALLENGE";
+
+  history.unshift({
+    ...challenge,
+    category: selectedType,
+    time: new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    })
+  });
+
+  renderHistory();
+  updateStats();
+}
+
+function renderHistory() {
+  const historyEl = document.getElementById("history");
+
+  if (history.length === 0) {
+    historyEl.innerHTML =
+      '<div class="empty">No challenges generated yet!</div>';
+    return;
+  }
+
+  historyEl.innerHTML = history.slice(0, 40).map(item => `
+    <div class="history-item">
+      <strong>${escapeHTML(item.title)}</strong>
+      <small>${escapeHTML(item.category)} · ${escapeHTML(item.time)}</small>
+    </div>
+  `).join("");
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[char]);
+}
+
+// Category selection
+document.querySelectorAll(".category").forEach(button => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll(".category").forEach(btn =>
+      btn.classList.remove("active")
+    );
+
+    button.classList.add("active");
+    selectedType = button.dataset.type;
+
+    titleEl.textContent = "Waiting for a challenge...";
+    titleEl.classList.add("placeholder");
+    descriptionEl.textContent =
+      "Hit RANDOMIZE to generate a " + selectedType + " challenge!";
+
+    document.getElementById("resultTag").textContent =
+      selectedType.toUpperCase() + " CHALLENGE";
+
+    updateStats();
+  });
+});
+
+document.getElementById("randomize").addEventListener("click", generateChallenge);
+document.getElementById("reroll").addEventListener("click", generateChallenge);
+
+document.getElementById("clearHistory").addEventListener("click", () => {
+  history = [];
+  renderHistory();
+});
+
+document.getElementById("resetPool").addEventListener("click", () => {
+  used[selectedType] = [];
+  updateStats();
+  statusEl.textContent = selectedType + " challenge pool reset!";
+});
+
+updateStats();
+</script>
+</body>
+</html>
